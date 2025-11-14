@@ -157,6 +157,8 @@ class EvolutionaryAlgorithm:
         for individual in population:
             problem.compute_fitness(individual)
 
+        historical_fitness = []
+
         for gen in range(max_generations):
             new_population = [Selection.get_best(population)]
 
@@ -179,6 +181,7 @@ class EvolutionaryAlgorithm:
 
             population = new_population
             best_fitness_so_far = population[0].fitness
+            historical_fitness.append(best_fitness_so_far)
             print(f"Generation {gen+1}/{max_generations}, Best Fitness: {best_fitness_so_far * 100:.2f}%", end="\r")
 
-        return Selection.get_best(population)
+        return Selection.get_best(population), historical_fitness

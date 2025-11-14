@@ -4,8 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 
-from mlp import MLP
-from evolutionary_algorithm import Chromosome
+from .mlp import MLP
+from .evolutionary_algorithm import Chromosome
 
 class BreastCancerProblem:
 
@@ -33,7 +33,9 @@ class BreastCancerProblem:
         self.no_genes = self.mlp_evaluator.get_total_parameters()
 
         # We process the data from the dataframe (from the PyTorch implementation)
-        dataframe = pd.read_csv("../data/data.csv")
+        # Note that the path does not start with .. because we execute this from main.py
+        # in the parent directory.
+        dataframe = pd.read_csv("data/data.csv")
 
         dataframe.iloc[:, 1] = dataframe.iloc[:,1].map({'M': 1.0, 'B' : 0.0})
         dataframe.replace("", np.nan, inplace=True)
