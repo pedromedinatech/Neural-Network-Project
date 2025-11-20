@@ -30,8 +30,9 @@ def main():
     experiments_list = [
 
         {"architecture" : [30, 15, 1], "population" : 10, "max_generations" : 50, "crossover_rate" : 0.8, "mutation_rate" : 0.2},
-        {"architecture" : [30, 20, 10, 1], "population" : 100, "max_generations" : 500, "crossover_rate" : 0.8, "mutation_rate" : 0.2}
-        # ...
+        {"architecture" : [30, 20, 10, 1], "population" : 100, "max_generations" : 500, "crossover_rate" : 0.8, "mutation_rate" : 0.2},
+        {"architecture": [30, 50, 1], "population": 100, "max_generations": 500, "crossover_rate": 0.8, "mutation_rate": 0.2},
+        {"architecture": [30, 10, 10, 5, 1], "population": 100, "max_generations": 500, "crossover_rate": 0.8, "mutation_rate": 0.2},
     ]
     
     for i, configuration in enumerate(experiments_list):
