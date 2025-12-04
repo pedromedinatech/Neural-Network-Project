@@ -51,19 +51,19 @@ class Selection:
     @staticmethod
     def tournament(population):
         
-        # seleccionar aleatoriamente dos indices distintos en population
+        # Randomly selects two different indices in population
 
         indexes = random.sample(range(len(population)), 2)
 
         index1, index2 = indexes[0], indexes[1]
         
-        # recuperar los dos cromosomas candidatos
+        # Retrieve both candidate chromosomes
 
         chromosome1 = population[index1]
         chromosome2 = population[index2]
 
-        # comparar sus valores de fitness (mas alto = mejor)
-        # devuelve una copia nueva del cromosoma con mayor fitness
+        # Compares fitness values
+        # Returns a copy with the best one
 
         if chromosome1.fitness > chromosome2.fitness:
             return chromosome1.__copy__()
@@ -75,9 +75,8 @@ class Selection:
     @staticmethod
     def get_best(population):
         
-        # Itera toda la población y localiza el índice del cromosoma con fitness máximo.
-        # Crea y devuelve una nueva instancia/copia de ese cromosoma (no la referencia original).
-        # Razonamiento: importante para poder examinar o archivar el mejor individuo sin que luego la población lo modifique.
+        # Iterates through population and finds the index of the chromosome with maximum fitness.
+        # Create and returns a new instance/copy of that chromosome (not the original reference).
 
         best_fitness = population[0].fitness
         best_index = 0
@@ -98,7 +97,7 @@ class Crossover:
     @staticmethod
     def arithmetic(mother, father, rate):
         
-        # Aplica el cruce aritmético entre los padres, usando probabilidad rate
+        # Applies arithmetic crossing between mother and father with p = rate
 
         child = Chromosome(mother.no_genes, mother.min_values, mother.max_values)
 
@@ -159,8 +158,31 @@ class EvolutionaryAlgorithm:
 
         historical_fitness = []
 
+        best_fitness_ever = 0.0
+        generations_without_improvement = 0
+
+        stagnation_threshold = 50  # Number of generations to consider for stagnation
+
         for gen in range(max_generations):
-            new_population = [Selection.get_best(population)]
+
+            current_best = Selection.get_best(population)
+
+            current_fitness = current_best.fitness
+
+            if current_fitness > best_fitness_ever:
+                best_fitness_ever = current_fitness
+                generations_without_improvement = 0
+                current_mutation_rate = mutation_rate
+            else:
+                generations_without_improvement += 1
+
+            if generations_without_improvement >= stagnation_threshold:
+
+                current_mutation_rate = 0.5  # Increase mutation rate to 50% during stagnation
+            else:
+                current_mutation_rate = mutation_rate
+
+            new_population = [current_best]
 
             for i in range(1, population_size):
                 # select 2 parents: Selection.tournament
@@ -171,7 +193,7 @@ class EvolutionaryAlgorithm:
                 child = Crossover.arithmetic(father, mother, crossover_rate)
 
                 # apply mutation to the child: Mutation.reset
-                Mutation.reset(child, mutation_rate)
+                Mutation.reset(child, current_mutation_rate)
 
                 # calculate fitness for the child: compute_fitness from problem p
                 problem.compute_fitness(child)

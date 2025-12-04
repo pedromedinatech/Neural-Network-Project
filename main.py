@@ -30,11 +30,24 @@ def main():
     experiments_list = [
 
         {"architecture" : [30, 15, 1], "population" : 10, "max_generations" : 50, "crossover_rate" : 0.8, "mutation_rate" : 0.2},
-        {"architecture" : [30, 20, 10, 1], "population" : 100, "max_generations" : 500, "crossover_rate" : 0.8, "mutation_rate" : 0.2},
-        {"architecture": [30, 50, 1], "population": 100, "max_generations": 500, "crossover_rate": 0.8, "mutation_rate": 0.2},
-        {"architecture": [30, 10, 10, 5, 1], "population": 100, "max_generations": 500, "crossover_rate": 0.8, "mutation_rate": 0.2},
+        {"architecture" : [30, 20, 10, 1], "population" : 100, "max_generations" : 300, "crossover_rate" : 0.8, "mutation_rate" : 0.2},
+        {"architecture": [30, 50, 1], "population": 100, "max_generations": 300, "crossover_rate": 0.8, "mutation_rate": 0.2},
+        {"architecture": [30, 10, 10, 5, 1], "population": 100, "max_generations": 300, "crossover_rate": 0.8, "mutation_rate": 0.2},
     ]
     
+    """
+    I am wondering to not tweak the mutation/crossover rates at the beginning.
+    The architecture and population size seem to be the most relevant parameters.
+    Maybe it is a good idea to start tweaking them inside the experiment, when
+    the EA is running and the model seem to be stuck. From the first version,
+    we can see the model tends to stagnate after some generations. So maybe it is a 
+    great idea to let it do crossover, and when stagnation is detected, increase mutation rate
+    for some generations, then set it back to the original value.
+
+    So my approach will be, only tweak architecture, population size and max generations here.
+
+    So we have to modify the EA class to allow dynamic mutation rate changes during execution.
+    """
     for i, configuration in enumerate(experiments_list):
 
         print(f"Starting experiment {i+1}/{len(experiments_list)}\n")
